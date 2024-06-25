@@ -55,14 +55,19 @@ func (g *GameEngine) checkGameEndCondition() bool {
 	return true
 }
 
-func (g *GameEngine) initEvent() int {
+func (g *GameEngine) initEvent() {
 	for pos, entity := range g.entities {
 		if entity.Timer.CheckComplete() && entity.Attributes.HP > 0 {
-			return pos
+			if pos == 0 {
+				g.action(pos)
+			} else {
+				go g.action(pos)
+				g.entities[pos].Timer.ResetTimer()
+				go g.entities[pos].Timer.StartCountdown()
+			}
+
 		}
 	}
-
-	return -1
 }
 
 func (g *GameEngine) printPlayer(position int) {
@@ -111,8 +116,7 @@ func (g *GameEngine) enemyAttack(position int) {
 	var damage int = (rand.Intn(max-min) + min)
 	fmt.Println("\n", g.entities[position].Name, " attacks ", " inflicts ", damage, " points")
 	g.entities[0].Attributes.HP = g.entities[0].Attributes.HP - damage
-	g.entities[position].Timer.ResetTimer()
-	go g.entities[position].Timer.StartCountdown()
+
 }
 
 func (g *GameEngine) heroSelectAttack() {
@@ -162,16 +166,13 @@ func (g *GameEngine) action(position int) {
 }
 
 func (g *GameEngine) StartGame() {
-	var event int
 
 	fmt.Println("Prepare to Fight", "\n")
 	g.printCharacter(0, false)
 	g.printEnemies()
 
 	for g.checkGameEndCondition() {
-		event = g.initEvent()
-		if event > -1 {
-			g.action(event)
-		}
+		g.initEvent()
+
 	}
 }

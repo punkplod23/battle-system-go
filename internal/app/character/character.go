@@ -42,8 +42,8 @@ func CreatePlayer() Character {
 
 // CreateEnemy returns Character of charactertype ENEMY
 func CreateEnemy() Character {
-	min := 7
-	max := 10
+	min := 15
+	max := 20
 	timer := timer.NewTimer(rand.Intn(max-min) + min)
 	attributes := Attributes{HP: rand.Intn(100), MP: rand.Intn(100)}
 	character := Character{Name: "Enemy" + RandStringRunes(10), Charactertype: "ENEMY", Attributes: attributes, Timer: timer}
