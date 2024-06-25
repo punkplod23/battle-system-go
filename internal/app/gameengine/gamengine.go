@@ -71,12 +71,12 @@ func (g *GameEngine) printPlayer(position int) {
 
 	if position != 0 {
 		message += " " + g.entities[0].Name
+		fmt.Println(message)
 		g.enemyAttack(position)
 	}
 
-	fmt.Println(message)
-
 	if position == 0 {
+		fmt.Println(message)
 		fmt.Printf("Please Select Enemy to Attack")
 		g.heroSelectAttack()
 	}
